@@ -31,6 +31,6 @@ if __name__ == "__main__":
         if now_file_size>=int(filesize) :
             break
 
-print("Finish writing")
+print("Finish")
 
 
