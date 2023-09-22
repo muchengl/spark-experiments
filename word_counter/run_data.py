@@ -4,48 +4,28 @@ Example:
 spark-submit --executor-memory 10g [filename]
 """
 submit_spark_task = "spark-submit"
-# executor_memory = [
-#     " 150g",
-#     " 140g",
-#     " 130g",
-#     " 120g",
-#     " 110g",
-#     " 100g",
-#     " 90g",
-#     " 80g",
-#     " 70g",
-#     " 60g",
-#     " 50g",
-#     " 45g",
-#     " 40g",
-#     " 35g",
-#     " 30g",
-#     " 25g",
-#     " 20g",
-#     " 15g",
-#     " 10g",
-#     " 5g",
-#     " 4g",
-#     " 3g",
-#     " 2g",
-#     " 1g",
-# ]
 
 arguments = [
-    # JAVA agent Optional
-    " --conf \"spark.executor.extraJavaOptions=-javaagent:/home/grads/l/liu.hz/monitor/jmx/jmx_prometheus_javaagent-0.19.0.jar=3010:/home/grads/l/liu.hz/monitor/jmx/config.yaml\"",
+    # enable Jvm montior
+    " --conf \"spark.executor.extraJavaOptions=-javaagent:/home/grads/l/liu.hz/monitor/jmx/jmx_prometheus_javaagent-0.19.0.jar=3010:/home/grads/l/liu.hz/monitor/jmx/config.yaml",
+    
+    # enable gc log
+    " -Xlog:gc*,gc+ref*,gc+ergo*,gc+heap*,gc+stats*,gc+compaction*,gc+age*:file=/home/grads/l/liu.hz/logs/executor-gc.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:-UseCompressedOops\""
+    
+    # core num
+    " --conf spark.executor.cores=8"
+
     " --executor-memory"
 ]
 executor_memory = [
-    " 150g",
-    " 130g",
-    " 100g",
-    " 80g",
-    " 40g",
-    " 20g",
-    " 10g",
-    " 5g",
+    " 500m",
+    " 700m",
+    " 900m",
     " 1g",
+    " 3g",
+    " 5g",
+    " 10g",
+    " 20g",  
 ]
 task_code = " ~/dev/spark-experiments/word_counter/word_count.py"
 task_data_resource = " hdfs://csce-nguyen-s4.engr.tamu.edu:9000"
@@ -65,8 +45,6 @@ hdfs_path = "/spark/word_counter/"
 #     "100Mb.txt",
 # ]
 task_data_files = [
-    "100Mb.txt",
-    "200Mb.txt",
     "wiki.en.text",
     "10G.txt",
     "5G.txt",
@@ -74,6 +52,8 @@ task_data_files = [
     "1G.txt",
     "500Mb.txt",
     "300Mb.txt",
+    "100Mb.txt",
+    "200Mb.txt",
 ]
 
 

@@ -32,7 +32,7 @@ def submit_spark_tasks():
 
             print("Time Usage:", time)
 
-            utils.download_log(comment_secs[2],comment_secs[5])
+            utils.download_log(mem,data_file)
 
             file_size = utils.get_file_size_hdfs(data.hdfs_path+data_file)
             utils.write_CVS("time","data/time.cvs",time,data.hdfs_path+data_file,file_size,mem,"NA")

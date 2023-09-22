@@ -1,2 +1,6 @@
 *.log
 logs/*
+__pycache__/*
+trace/*
+data/*
+*.out
