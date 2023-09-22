@@ -1,40 +1,48 @@
-import subprocess
+import run_utils as utils
+import run_data as data
+import sys
+
+
+def submit_spark_tasks():
+
+    for mem in data.executor_memory:
+        for data_file in data.task_data_files:
+            print("===========================================================")
+            
+            comment_secs=[
+                data.submit_spark_task,
+                data.arguments,
+                mem,
+                data.task_code,
+                data.task_data_resource,
+                data_file
+            ]
+            comment = utils.build_comment("",comment_secs)
+            print("RUN: ",comment)
+
+            # Run
+            result,time = utils.run_comment_with_time_count(comment)
+
+            print("\n*** OUTPUT BEGIN ***\n", result.stdout)
+            print("*** OUTPUT END ***\n")
+            # print("ERR:\n", result.stderr)
+            print("Time Usage:", time)
+
+            utils.download_log(comment_secs[2],comment_secs[5])
+
+            print("===========================================================\n")
 
 
 """
-For Spark Task Submit
+RUN_EX.py
+Log output: ./logs/[server_host]+_+[spark_config]_[file_name].log
 """
-submit_spark_task = "spark-submit"
-arguments = [
-    "--conf \"spark.executor.extraJavaOptions=-javaagent:/home/grads/l/liu.hz/monitor/jmx/jmx_prometheus_javaagent-0.19.0.jar=3010:/home/grads/l/liu.hz/monitor/jmx/config.yaml\"",
-    "--executor-memory 10g"
-]
-task_code = "~/dev/spark-experiments/word_counter/word_count.py"
-task_data_resource = "hdfs://csce-nguyen-s4.engr.tamu.edu:9000/spark/word_counter/wiki.en.text"
-
-
-
-def build_commend(commend,secs):
-    for s in secs:
-        if type(s) in (list, tuple) :
-            commend = build_commend(commend,s)
-        else:
-            commend=commend+" "+s
-    return commend
-
 
 if __name__ == "__main__":
+    print("Init Env:")
+    if utils.init_env()==False:
+       sys.exit(1) 
 
-    commend_secs=[
-        submit_spark_task,
-        arguments,
-        task_code,
-        task_data_resource
-    ]
-    commend = build_commend("",commend_secs)
-
-    # run task
-    result = subprocess.run(commend, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-
-    print("OUTPUT:\n", result.stdout)
-    print("ERR:\n", result.stderr)
+    submit_spark_tasks()
+   
+    
