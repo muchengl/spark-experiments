@@ -4,6 +4,8 @@ import sys
 
 
 def submit_spark_tasks():
+    # init cvs files
+    utils.write_CVS("explain","data/time.cvs","time","data_file_name","file_size","spark_mem_cfg","spark_instance")
 
     for mem in data.executor_memory:
         for data_file in data.task_data_files:
@@ -15,20 +17,25 @@ def submit_spark_tasks():
                 mem,
                 data.task_code,
                 data.task_data_resource,
+                data.hdfs_path,
                 data_file
             ]
             comment = utils.build_comment("",comment_secs)
             print("RUN: ",comment)
-
+            
             # Run
             result,time = utils.run_comment_with_time_count(comment)
 
             print("\n*** OUTPUT BEGIN ***\n", result.stdout)
             print("*** OUTPUT END ***\n")
             # print("ERR:\n", result.stderr)
+
             print("Time Usage:", time)
 
             utils.download_log(comment_secs[2],comment_secs[5])
+
+            file_size = utils.get_file_size_hdfs(data.hdfs_path+data_file)
+            utils.write_CVS("time","data/time.cvs",time,data.hdfs_path+data_file,file_size,mem,"NA")
 
             print("===========================================================\n")
 
@@ -37,9 +44,8 @@ def submit_spark_tasks():
 RUN_EX.py
 Log output: ./logs/[server_host]+_+[spark_config]_[file_name].log
 """
-
 if __name__ == "__main__":
-    print("Init Env:")
+    print("*** Init Env ***")
     if utils.init_env()==False:
        sys.exit(1) 
 
