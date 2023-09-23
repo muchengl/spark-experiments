@@ -41,6 +41,7 @@ def init_env():
         print(f"Can't mkdir {folder_path}: {e}")
         return False
     
+    # init data dir
     folder_path = "data"
     if os.path.exists(folder_path) and os.path.isdir(folder_path):
         try:

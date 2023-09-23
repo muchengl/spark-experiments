@@ -2,10 +2,9 @@ import run_utils as utils
 import run_data as data
 import sys
 
-
 def submit_spark_tasks():
     # init cvs files
-    utils.write_CVS("explain","data/time.cvs","time","data_file_name","file_size","spark_mem_cfg","spark_instance")
+    utils.write_CVS("explain","data/time.csv","time","data_file_name","file_size","spark_mem_cfg","spark_instance")
 
     for mem in data.executor_memory:
         for data_file in data.task_data_files:
@@ -35,7 +34,7 @@ def submit_spark_tasks():
             utils.download_log(mem,data_file)
 
             file_size = utils.get_file_size_hdfs(data.hdfs_path+data_file)
-            utils.write_CVS("time","data/time.cvs",time,data.hdfs_path+data_file,file_size,mem,"NA")
+            utils.write_CVS("time","data/time.csv",time,data.hdfs_path+data_file,file_size,mem,"NA")
 
             print("===========================================================\n")
 
